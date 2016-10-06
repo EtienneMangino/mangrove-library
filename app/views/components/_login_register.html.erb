@@ -1,0 +1,51 @@
+<% if current_user && logged_in? %>
+  <!--Do stuff with the user? maybe show something else?-->
+
+  <!--maybe show some messages? or popular posts. some other call to action.-->
+<% else %>
+  <!-- *****************************************************************************************************************
+   HEADERWRAP
+   ***************************************************************************************************************** -->
+  <div id="headerwrap">
+    <div class="container alert alert-dismissable">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span></button>
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+          <h3>Reddit/Hackernews/ProductHunt Clone</h3>
+
+          <h1>Start Your Own Link Sharing Community!</h1>
+          <h5>Immediately start signing people up and let them share links and more!</h5>
+          <div>
+            <iframe src="https://ghbtns.com/github-btn.html?user=blairanderson&repo=rails-hackernews-reddit-producthunt-clone&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+            <iframe src="https://ghbtns.com/github-btn.html?user=blairanderson&repo=rails-hackernews-reddit-producthunt-clone&type=fork&count=true&size=large" frameborder="0" scrolling="0" width="158px" height="30px"></iframe>
+          </div>
+          <% @user ||= User.new %>
+          <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+              <div class="form-group">
+                <div class="row">
+                  <%= link_to 'LOGIN', "javascript:void(0)", class: 'btn btn-theme btn-lg btn-block', data: {toggle: 'collapse', target: '#root-login'} %>
+                </div>
+
+                <div class="collapse" id="root-login">
+                  <%= render partial: 'user_sessions/form' %>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="row">
+                  <%= link_to 'REGISTER', "javascript:void(0)", class: 'btn btn-theme btn-lg btn-block', data: {toggle: 'collapse', target: '#root-register'} %>
+                </div>
+
+                <div class="collapse" id="root-register">
+                  <%= render partial: 'users/form' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

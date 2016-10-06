@@ -1,0 +1,43 @@
+<!-- Fixed navbar -->
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <%= link_to site_title_text, root_path, class: 'navbar-brand' %>
+    </div>
+    <div class="navbar-collapse collapse navbar-right">
+      <ul class="nav navbar-nav">
+        <%= link_to_list_item("TOP", items_path) %>
+        <%= link_to_list_item("NEW", items_path(newest: true)) %>
+        <% if current_user %>
+          <%= link_to_list_item 'SUBMIT', new_item_path %>
+          <% if @item && @item.persisted? && @item.user_id == current_user.id %>
+            <%= link_to_list_item 'EDIT', edit_item_path(@item) %>
+          <% end %>
+        <% else %>
+          <%= link_to_list_item 'REGISTER', new_user_path %>
+          <%= link_to_list_item 'LOGIN', :login %>
+        <% end %>
+
+        <% if current_user %>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">PROFILE <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <%= link_to_list_item current_user.username.try(:upcase), current_user %>
+              <%= link_to_list_item 'EDIT PROFILE', edit_user_path(current_user) %>
+              <%= link_to_list_item 'LOGOUT', logout_path, method: :post %>
+            </ul>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+<%= render 'components/flash' %>
+
+

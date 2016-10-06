@@ -1,0 +1,7 @@
+<%= simple_form_for :login, html: {class: 'form-horizontal'}, url: user_sessions_path, method: :post do |f| %>
+  <%= f.input :username %>
+  <%= f.input :password %>
+  <div class="row">
+    <%= f.button :submit, "Login", class: 'btn-block' %>
+  </div>
+<% end %>
