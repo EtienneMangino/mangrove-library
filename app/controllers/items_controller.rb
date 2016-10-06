@@ -5,7 +5,18 @@ class ItemsController < ApplicationController
 
   def index
 
-    order = params[:newest] ? {created_at: :desc} : {score: :desc}
+    order = {score: :desc}
+
+    @items = Item.order(order).includes(:user)
+
+    @votes = @items.includes(:votes).each_with_object({}) do |item, object|
+      object[item.id] = item.votes.map(&:user_id)
+    end
+  end
+
+  def newest
+
+    order = {created_at: :desc}
 
     @items = Item.order(order).includes(:user)
 

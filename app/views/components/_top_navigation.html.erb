@@ -13,7 +13,7 @@
     <div class="navbar-collapse collapse navbar-right">
       <ul class="nav navbar-nav">
         <%= link_to_list_item("TOP", items_path) %>
-        <%= link_to_list_item("NEW", items_path(newest: true)) %>
+        <%= link_to_list_item("NEW", newest_items_path) %>
         <% if current_user %>
           <%= link_to_list_item 'SUBMIT', new_item_path %>
           <% if @item && @item.persisted? && @item.user_id == current_user.id %>

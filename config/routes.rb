@@ -3,6 +3,9 @@
 Rails.application.routes.draw do
   resources :items, except: [:destroy] do
     resources :item_comments
+    collection do
+      get :newest
+    end
     member do
       post :toggle
       post :vote, to: 'user_item_votes#create'
