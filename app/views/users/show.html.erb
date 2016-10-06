@@ -1,16 +1,12 @@
-<p>
-  <strong>Username:</strong>
-  <%= @user.username %>
-</p>
+<div class="col-xs-12 col-lg-4 col-lg-offset-4">
+
+  <h1><%= @user.username %></h1>
 
 
-<p>
-  <strong>Karma:</strong>
-  <%= @user.karma %>
-</p>
 
+<!--   <strong>About:</strong> -->
+  <div class= "comment-content">
+    <%= @user.about %>
+  </div>
 
-<p>
-  <strong>About:</strong>
-  <%= @user.about %>
-</p>
+</div>

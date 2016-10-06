@@ -4,9 +4,11 @@ class ItemsController < ApplicationController
   before_action :set_user_item, only: [:edit, :update, :toggle]
 
   def index
-    order = params[:newest] ? {created_at: :desc} : {rank: :desc}
+
+    order = params[:newest] ? {created_at: :desc} : {score: :desc}
 
     @items = Item.order(order).includes(:user)
+
     @votes = @items.includes(:votes).each_with_object({}) do |item, object|
       object[item.id] = item.votes.map(&:user_id)
     end
@@ -64,6 +66,6 @@ class ItemsController < ApplicationController
   end
 
   def item_params
-    params.require(:item).permit(:title, :url, :content)
+    params.require(:item).permit(:title, :url, :content, :link, :description)
   end
 end

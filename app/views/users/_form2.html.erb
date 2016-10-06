@@ -1,0 +1,10 @@
+<%= simple_form_for(@user, html: { class: 'form-horizontal' }) do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :username %>
+  <%= f.input :about %>
+  <div class="row">
+    <%= f.button :submit, class: 'btn-block' %>
+  </div>
+<% end %>
+
+

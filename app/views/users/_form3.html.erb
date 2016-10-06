@@ -1,0 +1,10 @@
+<%= simple_form_for(@user, html: { class: 'form-horizontal' }) do |f| %>
+  <%= f.error_notification %>
+  <%= f.input :password, as: :password,label: "New password" %>
+  <%= f.input :password_confirmation, as: :password,label: "New password Confirmation" %>
+  <div class="row">
+    <%= f.button :submit, "Change password", class: 'btn-block' %>
+  </div>
+<% end %>
+
+

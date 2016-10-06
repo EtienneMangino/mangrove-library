@@ -12,7 +12,11 @@ Rails.application.routes.draw do
 
   root to: 'items#index'
 
-  resources :users, except: [:index]
+  resources :users, except: [:index] do
+    member do
+      get :edit_password
+    end
+  end
   resources :user_sessions, only: [:new, :create, :destroy]
 
   get 'login' => 'user_sessions#new', as: :login

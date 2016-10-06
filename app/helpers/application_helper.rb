@@ -1,11 +1,11 @@
 module ApplicationHelper
 
   def site_title_text
-    ENV["SITE_TITLE"] || "RRHNClone."
+    ENV["SITE_TITLE"] || "The Mangrove Library"
   end
 
   def seo_title_text
-    ENV["SEO_TITLE"] || "Rails Hackernews Reddit Producthunt Clone Github"
+    ENV["SEO_TITLE"] || "The Mangrove Library"
   end
 
   def link_to_list_item(name, link, options={})

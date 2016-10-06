@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :require_login, only: [:edit, :update, :destroy]
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :require_login, only: [:edit, :update, :destroy, :edit_password]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :edit_password]
 
   def new
     # user registration page
@@ -23,6 +23,10 @@ class UsersController < ApplicationController
   end
 
   def edit
+    #   profile edit
+  end
+
+  def edit_password
     #   profile edit
   end
 

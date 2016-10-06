@@ -1,6 +1,11 @@
-<h1>Editing User</h1>
+<div class="col-xs-12 col-lg-4 col-lg-offset-4">
+  <h1>Editing User</h1>
 
-<%= render 'form' %>
-
-<%= link_to 'Show', @user %> |
-<%= link_to 'Back', users_path %>
+  <%= render 'form2' %>
+  <br>
+  <div class="text-center">
+    <%= link_to edit_password_user_path(current_user), class: "btn btn-default btn" do %>
+      <span class="glyphicon glyphicon-edit"></span> Change password
+    <%end%>
+  </div>
+</div>
