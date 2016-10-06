@@ -1,19 +1,22 @@
-<p>
+<!-- <p>
   <strong>[score: <%= @item.score %>]</strong>
   <%= render_votes_for_item(@item) %>
   <span>comments: <%= @item.comments_count %></span>
-</p>
+</p> -->
 <%= content_for(:title) do %>
   <%= @item.title %>
 <% end %>
 <p>
   <strong>
-    <h1><%= link_to @item.title, @item, title: @item.url %></h1>
-    <small>(<%= @item.url %>)</small>
+    <h1><%= @item.title %></h1>
+    Link : <%= link_to @item.link, @item.link, title: @item.url, target: :_blank %>
+    <br>
+    Posted by <%= link_to @item.user.username, @item.user %>
+    <p><strong>Description</strong></p>
+    <p><%= @item.description %></p>
   </strong>
-  <span><small>(posted by: <%= link_to @item.user.username, @item.user %>)</small></span>
 </p>
-
+<h2>Comments</h2>
 <ul>
   <% if current_user %>
     <li>

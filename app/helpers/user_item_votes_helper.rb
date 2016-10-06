@@ -1,10 +1,10 @@
 module UserItemVotesHelper
   def link_to_upvote(object)
-    link_to 'like!', vote_item_path(object), method: :post, class: 'text-danger'
+    link_to 'like', vote_item_path(object), method: :post, class: 'btn btn-info btn-xs'
   end
 
   def link_to_downvote(object)
-    link_to 'unlike!', vote_item_path(object), method: :delete, class: 'text-muted'
+    link_to 'unlike', vote_item_path(object), method: :delete, class: 'btn btn-warning btn-xs'
   end
 
   def render_votes_for_item(item=nil)
