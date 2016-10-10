@@ -13005,3 +13005,253 @@ Processing by ItemsController#show as HTML
   Rendered components/_top_navigation.html.erb (1.0ms)
   Rendered components/_footer.html.erb (0.0ms)
 Completed 200 OK in 48ms (Views: 36.6ms | ActiveRecord: 2.0ms)
+  [1m[36m (347.4ms)[0m  [1mCREATE DATABASE "mangrove-library_development" ENCODING = 'unicode'[0m
+  [1m[36m (6.4ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL) [0m
+  [1m[35m (2.9ms)[0m  CREATE UNIQUE INDEX  "unique_schema_migrations" ON "schema_migrations"  ("version")
+  [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateUsers (20150215221519)
+  [1m[35m (0.3ms)[0m  BEGIN
+DEPRECATION WARNING: `#timestamp` was called without specifying an option for `null`. In Rails 5, this behavior will change to `null: false`. You should manually specify `null: true` to prevent the behavior of your existing migrations from changing. (called from block in change at /home/etienne/code/EtienneMangino/mangrove-library/db/migrate/20150215221519_create_users.rb:17)
+  [1m[36m (7.3ms)[0m  [1mCREATE TABLE "users" ("id" serial primary key, "username" character varying NOT NULL, "crypted_password" character varying, "salt" character varying, "admin" boolean DEFAULT 'f' NOT NULL, "disabled" boolean DEFAULT 'f' NOT NULL, "karma" integer DEFAULT 0 NOT NULL, "about" text, "auth" character varying, "token" character varying, "karma_increment_time" timestamp, "pwd_reset" timestamp, "replies_count" integer DEFAULT 0 NOT NULL, "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35m (4.8ms)[0m  CREATE UNIQUE INDEX  "index_users_on_username" ON "users"  ("username")
+  [1m[36m (2.3ms)[0m  [1mCREATE  INDEX  "index_users_on_auth_and_token" ON "users"  ("auth", "token")[0m
+  [1m[35mSQL (3.6ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20150215221519"]]
+  [1m[36m (2.4ms)[0m  [1mCOMMIT[0m
+Migrating to CreateItems (20150215230703)
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (6.9ms)[0m  [1mCREATE TABLE "items" ("id" serial primary key, "title" character varying NOT NULL, "url" character varying, "content" text, "user_id" integer NOT NULL, "disabled" boolean DEFAULT 'f' NOT NULL, "comments_count" integer DEFAULT 0 NOT NULL, "upvotes_count" integer DEFAULT 0 NOT NULL, "downvotes_count" integer DEFAULT 0 NOT NULL, "score" integer DEFAULT 0 NOT NULL, "rank" integer DEFAULT 0 NOT NULL, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (3.4ms)[0m  CREATE  INDEX  "index_items_on_user_id" ON "items"  ("user_id")
+  [1m[36m (3.0ms)[0m  [1mCREATE  INDEX  "index_items_on_disabled" ON "items"  ("disabled")[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20150215230703"]]
+  [1m[36m (10.5ms)[0m  [1mCOMMIT[0m
+Migrating to CreateVotes (20150216000309)
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (7.6ms)[0m  [1mCREATE TABLE "votes" ("id" serial primary key, "user_id" integer NOT NULL, "votable_id" integer NOT NULL, "votable_type" character varying NOT NULL, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) [0m
+  [1m[35m (2.7ms)[0m  CREATE UNIQUE INDEX  "index_votes_on_user_id_and_votable_id_and_votable_type" ON "votes"  ("user_id", "votable_id", "votable_type")
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20150216000309"]]
+  [1m[35m (0.7ms)[0m  COMMIT
+Migrating to CreateItemComments (20150216170958)
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (5.6ms)[0m  CREATE TABLE "item_comments" ("id" serial primary key, "user_id" integer NOT NULL, "item_id" integer NOT NULL, "content" text NOT NULL, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL) 
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20150216170958"]]
+  [1m[35m (0.8ms)[0m  COMMIT
+Migrating to AddHotScoreFunction (20150405200823)
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (59.3ms)[0m        create or replace function
+        hot_score(ups integer, downs integer, date timestamp with time zone)
+        returns numeric as $$
+        select round(cast(log(greatest(abs($1 - $2), 1)) * sign($1 - $2) +
+          (date_part('epoch', $3) - 1134028003) / 45000.0 as numeric), 7)
+      $$ language sql immutable;
+
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20150405200823"]]
+  [1m[35m (1.1ms)[0m  COMMIT
+Migrating to AddAttributesToItems (20161006202416)
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.3ms)[0m  ALTER TABLE "items" ADD "link" character varying
+  [1m[36m (0.2ms)[0m  [1mALTER TABLE "items" ADD "description" text[0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20161006202416"]]
+  [1m[36m (0.6ms)[0m  [1mCOMMIT[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.2ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+  [1m[36m (2.1ms)[0m  [1mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'item_comments'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (2.0ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'items'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+  [1m[36m (5.7ms)[0m  [1mSELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'users'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+[0m
+  [1m[35m (2.4ms)[0m  SELECT t2.oid::regclass::text AS to_table, a1.attname AS column, a2.attname AS primary_key, c.conname AS name, c.confupdtype AS on_update, c.confdeltype AS on_delete
+FROM pg_constraint c
+JOIN pg_class t1 ON c.conrelid = t1.oid
+JOIN pg_class t2 ON c.confrelid = t2.oid
+JOIN pg_attribute a1 ON a1.attnum = c.conkey[1] AND a1.attrelid = t1.oid
+JOIN pg_attribute a2 ON a2.attnum = c.confkey[1] AND a2.attrelid = t2.oid
+JOIN pg_namespace t3 ON c.connamespace = t3.oid
+WHERE c.contype = 'f'
+  AND t1.relname = 'votes'
+  AND t3.nspname = ANY (current_schemas(false))
+ORDER BY c.conname
+
+
+
+Started GET "/" for 127.0.0.1 at 2016-10-10 04:02:45 -0700
+  [1m[36mActiveRecord::SchemaMigration Load (1.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by ItemsController#index as HTML
+  [1m[35mItem Load (1.7ms)[0m  SELECT "items".* FROM "items"  ORDER BY "items"."score" DESC
+  Rendered user_sessions/_form.html.erb (537.4ms)
+  Rendered users/_form.html.erb (18.9ms)
+  Rendered components/_login_register.html.erb (601.2ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "items".* FROM "items"  ORDER BY "items"."score" DESC[0m
+  Rendered collection (0.0ms)
+  Rendered items/index.html.erb within layouts/application (610.1ms)
+  Rendered components/_flash.html.erb (0.5ms)
+  Rendered components/_top_navigation.html.erb (2.4ms)
+  Rendered components/_footer.html.erb (0.3ms)
+Completed 200 OK in 995ms (Views: 962.5ms | ActiveRecord: 5.1ms)
+
+
+Started POST "/user_sessions" for 127.0.0.1 at 2016-10-10 04:02:51 -0700
+Processing by UserSessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"/XxqnKdNMPVlXT3kkkFDxVjWOnKGLDj+xoBYBt2URvn8QB8PrYdBLFjR7s2dXlpvubiQtb3nhMqODwZVY1Lhpw==", "login"=>{"username"=>"plume", "password"=>"[FILTERED]"}, "commit"=>"Login"}
+  [1m[35mUser Load (1.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."username" = 'plume'  ORDER BY "users"."id" ASC LIMIT 1
+  Rendered user_sessions/_form.html.erb (8.0ms)
+  Rendered user_sessions/new.html.erb within layouts/application (9.3ms)
+  Rendered components/_flash.html.erb (0.1ms)
+  Rendered components/_top_navigation.html.erb (1.4ms)
+  Rendered components/_footer.html.erb (0.1ms)
+Completed 200 OK in 98ms (Views: 93.3ms | ActiveRecord: 1.2ms)
+
+
+Started POST "/user_sessions" for 127.0.0.1 at 2016-10-10 04:02:55 -0700
+Processing by UserSessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"W5wW86OeJFulZ0rHS7qctn7C0XboPIKpgCrki0DOwCpaoGNgqVRVgpjrme5EpYUcn6x7sdP3Pp3IpbrY/ghndA==", "login"=>{"username"=>"plume", "password"=>"[FILTERED]"}, "commit"=>"Login"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."username" = 'plume'  ORDER BY "users"."id" ASC LIMIT 1[0m
+  Rendered user_sessions/_form.html.erb (10.8ms)
+  Rendered user_sessions/new.html.erb within layouts/application (14.1ms)
+  Rendered components/_flash.html.erb (0.1ms)
+  Rendered components/_top_navigation.html.erb (1.2ms)
+  Rendered components/_footer.html.erb (0.1ms)
+Completed 200 OK in 72ms (Views: 69.0ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/users/new" for 127.0.0.1 at 2016-10-10 04:02:57 -0700
+Processing by UsersController#new as HTML
+  Rendered users/_form.html.erb (11.6ms)
+  Rendered users/new.html.erb within layouts/application (12.6ms)
+  Rendered components/_flash.html.erb (0.1ms)
+  Rendered components/_top_navigation.html.erb (2.0ms)
+  Rendered components/_footer.html.erb (0.1ms)
+Completed 200 OK in 71ms (Views: 69.9ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/users" for 127.0.0.1 at 2016-10-10 04:03:14 -0700
+Processing by UsersController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"AXxFfXkTQlSftNcH56MHdpk/eGOd9YJDTENKbhaZF2MAQDDuc9kzjaI4BC7ovB7ceFHSpKY+PncEzBQ9qF+wPQ==", "user"=>{"username"=>"Etienne", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "about"=>"Coucou\r\n"}, "commit"=>"Create User"}
+  [1m[35m (0.3ms)[0m  BEGIN
+  [1m[36mUser Exists (0.9ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE "users"."username" = 'Etienne' LIMIT 1[0m
+  [1m[35mUser Exists (0.2ms)[0m  SELECT  1 AS one FROM "users" WHERE "users"."token" = $1 LIMIT 1  [["token", "422e764600f7fff3fe5100d05d7dbed0"]]
+  [1m[36mSQL (17.6ms)[0m  [1mINSERT INTO "users" ("username", "about", "salt", "crypted_password", "created_at", "updated_at", "token") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING "id"[0m  [["username", "Etienne"], ["about", "Coucou\r\n"], ["salt", "9hvk4kTspqsMQBbcEo1i"], ["crypted_password", "$2a$10$xTvc4Ru7II4q2b7iCCGdZuB9CyyPapqI8e3ZNtfjT/8s6UvmJOXGG"], ["created_at", "2016-10-10 11:03:14.328453"], ["updated_at", "2016-10-10 11:03:14.328453"], ["token", "422e764600f7fff3fe5100d05d7dbed0"]]
+  [1m[35m (12.5ms)[0m  COMMIT
+Redirected to http://localhost:3000/
+Completed 302 Found in 282ms (ActiveRecord: 31.6ms)
+
+
+Started GET "/" for 127.0.0.1 at 2016-10-10 04:03:14 -0700
+Processing by ItemsController#index as HTML
+  [1m[36mItem Load (0.4ms)[0m  [1mSELECT "items".* FROM "items"  ORDER BY "items"."score" DESC[0m
+  [1m[35mUser Load (0.6ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT 1  [["id", 1]]
+  Rendered components/_login_register.html.erb (6.8ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "items".* FROM "items"  ORDER BY "items"."score" DESC[0m
+  Rendered collection (0.0ms)
+  Rendered items/index.html.erb within layouts/application (10.0ms)
+  Rendered components/_flash.html.erb (0.7ms)
+  Rendered components/_top_navigation.html.erb (2.7ms)
+  Rendered components/_footer.html.erb (0.1ms)
+Completed 200 OK in 101ms (Views: 98.1ms | ActiveRecord: 1.0ms)
+
+
+Started GET "/items/new" for 127.0.0.1 at 2016-10-10 04:03:16 -0700
+Processing by ItemsController#new as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT 1  [["id", 1]]
+  Rendered items/_form.html.erb (21.7ms)
+  Rendered items/new.html.erb within layouts/application (24.1ms)
+  Rendered components/_flash.html.erb (0.8ms)
+  Rendered components/_top_navigation.html.erb (3.0ms)
+  Rendered components/_footer.html.erb (0.1ms)
+Completed 200 OK in 136ms (Views: 105.0ms | ActiveRecord: 1.6ms)
+
+
+Started POST "/items" for 127.0.0.1 at 2016-10-10 04:03:35 -0700
+Processing by ItemsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"1wsQwTr07dL4yWA4MnJbeQBtcSChNugGaVIElmwCVGrWN2VSMD6cC8VFsxE9bULT4QPb55r9VDIh3VrF0sTzNA==", "item"=>{"title"=>"Test SLACK", "link"=>"", "description"=>"jdpo pojeof pjfpojespof jpoejf pjsof jsojf sjf"}, "commit"=>"Submit this book"}
+  [1m[36mUser Load (0.5ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mItem Exists (0.9ms)[0m  [1mSELECT  1 AS one FROM "items" WHERE "items"."title" = 'Test SLACK' LIMIT 1[0m
+  [1m[35mItem Exists (0.7ms)[0m  SELECT  1 AS one FROM "items" WHERE "items"."id" IS NULL LIMIT 1
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "items" ("title", "link", "description", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["title", "Test SLACK"], ["link", ""], ["description", "jdpo pojeof pjfpojespof jpoejf pjsof jsojf sjf"], ["user_id", 1], ["created_at", "2016-10-10 11:03:35.376111"], ["updated_at", "2016-10-10 11:03:35.376111"]]
+  [1m[35m (27.7ms)[0m  COMMIT
+Redirected to http://localhost:3000/items/1
+Completed 302 Found in 790ms (ActiveRecord: 30.4ms)
+
+
+Started GET "/items/1" for 127.0.0.1 at 2016-10-10 04:03:36 -0700
+Processing by ItemsController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mItem Load (0.4ms)[0m  [1mSELECT  "items".* FROM "items" WHERE "items"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mVote Load (0.8ms)[0m  SELECT "votes".* FROM "votes" WHERE "votes"."votable_type" = 'Item' AND "votes"."votable_id" IN (1)
+  [1m[36mUser Load (1.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (3.5ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mItemComment Load (0.8ms)[0m  [1mSELECT "item_comments".* FROM "item_comments" WHERE "item_comments"."item_id" = $1  ORDER BY "item_comments"."created_at" ASC[0m  [["item_id", 1]]
+  Rendered items/show.html.erb within layouts/application (66.5ms)
+  Rendered components/_flash.html.erb (0.3ms)
+  Rendered components/_top_navigation.html.erb (3.7ms)
+  Rendered components/_footer.html.erb (0.2ms)
+Completed 200 OK in 167ms (Views: 111.1ms | ActiveRecord: 13.6ms)
+
+
+Started GET "/items/new" for 127.0.0.1 at 2016-10-10 04:15:18 -0700
+Processing by ItemsController#new as HTML
+  [1m[35mUser Load (0.3ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT 1  [["id", 1]]
+  Rendered items/_form.html.erb (6.8ms)
+  Rendered items/new.html.erb within layouts/application (7.4ms)
+  Rendered components/_flash.html.erb (0.1ms)
+  Rendered components/_top_navigation.html.erb (2.1ms)
+  Rendered components/_footer.html.erb (0.1ms)
+Completed 200 OK in 110ms (Views: 66.8ms | ActiveRecord: 5.1ms)
+
+
+Started POST "/items" for 127.0.0.1 at 2016-10-10 04:15:30 -0700
+Processing by ItemsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"QD1MYNFYe56Cngm9iUoEaJ9AR0cQb7Exb1tierHz7ZBBATnz25IKR78S2pSGVR3Cfi7tgCukDQUn1DwpDzVKzg==", "item"=>{"title"=>"Second Test", "link"=>"", "description"=>""}, "commit"=>"Submit this book"}
+  [1m[36mUser Load (0.6ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mItem Exists (1.2ms)[0m  [1mSELECT  1 AS one FROM "items" WHERE "items"."title" = 'Second Test' LIMIT 1[0m
+  [1m[35mItem Exists (3.5ms)[0m  SELECT  1 AS one FROM "items" WHERE "items"."id" IS NULL LIMIT 1
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "items" ("title", "link", "description", "user_id", "created_at", "updated_at") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "id"[0m  [["title", "Second Test"], ["link", ""], ["description", ""], ["user_id", 1], ["created_at", "2016-10-10 11:15:30.261132"], ["updated_at", "2016-10-10 11:15:30.261132"]]
+  [1m[35m (1.0ms)[0m  COMMIT
+Redirected to http://localhost:3000/items/2
+Completed 302 Found in 687ms (ActiveRecord: 6.8ms)
+
+
+Started GET "/items/2" for 127.0.0.1 at 2016-10-10 04:15:30 -0700
+Processing by ItemsController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[36mItem Load (0.5ms)[0m  [1mSELECT  "items".* FROM "items" WHERE "items"."id" = $1 LIMIT 1[0m  [["id", 2]]
+  [1m[35mVote Load (0.4ms)[0m  SELECT "votes".* FROM "votes" WHERE "votes"."votable_type" = 'Item' AND "votes"."votable_id" IN (2)
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (2.8ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = $1 LIMIT 1  [["id", 1]]
+  [1m[36mItemComment Load (0.4ms)[0m  [1mSELECT "item_comments".* FROM "item_comments" WHERE "item_comments"."item_id" = $1  ORDER BY "item_comments"."created_at" ASC[0m  [["item_id", 2]]
+  Rendered items/show.html.erb within layouts/application (27.9ms)
+  Rendered components/_flash.html.erb (0.1ms)
+  Rendered components/_top_navigation.html.erb (3.4ms)
+  Rendered components/_footer.html.erb (0.1ms)
+Completed 200 OK in 106ms (Views: 78.5ms | ActiveRecord: 7.0ms)
